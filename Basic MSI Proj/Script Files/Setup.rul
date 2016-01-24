@@ -1,0 +1,77 @@
+////////////////////////////////////////////////////////////////////////////////
+//                                                                            
+//  This template script provides the code necessary to build an entry-point 
+//  function to be called in an InstallScript custom action. 
+//                                                                            
+//                                                                            
+//    File Name:  Setup.rul                                                   
+//                                                                            
+//  Description:  InstallShield script                                        
+//
+////////////////////////////////////////////////////////////////////////////////
+
+// Include Ifx.h for built-in InstallScript function prototypes, for Windows 
+// Installer API function prototypes and constants, and to declare code for 
+// the OnBegin and OnEnd events.
+#include "ifx.h"
+
+// The keyword export identifies MyFunction() as an entry-point function.
+// The argument it accepts must be a handle to the Installer database.
+export prototype GetDBInfo2Param(HWND);
+
+// To Do:  Declare global variables, define constants, and prototype user-
+//         defined and DLL functions here.
+
+
+// To Do:  Create a custom action for this entry-point function:
+// 1.  Right-click on "Custom Actions" in the Sequences/Actions view.
+// 2.  Select "Custom Action Wizard" from the context menu.
+// 3.  Proceed through the wizard and give the custom action a unique name.
+// 4.  Select "Run InstallScript code" for the custom action type, and in
+//     the next panel select "MyFunction" (or the new name of the entry-
+//     point function) for the source.
+// 5.  Click Next, accepting the default selections until the wizard
+//     creates the custom action.
+//
+// Once you have made a custom action, you must execute it in your setup by
+// inserting it into a sequence or making it the result of a dialog's
+// control event.
+
+///////////////////////////////////////////////////////////////////////////////
+//                                                                           
+// Function:  MyFunction
+//                                                                           
+//  Purpose:  This function will be called by the script engine when
+//            Windows(TM) Installer executes your custom action (see the "To
+//            Do," above).
+//                                                                           
+///////////////////////////////////////////////////////////////////////////////
+function GetDBInfo2Param(hMSI)
+    // To Do:  Declare local variables.
+    STRING ServerProperty, ServerValue, DataBaseProperty, DataBaseValue, UserIDProperty, UserIDValue, PasswordProperty, PasswordValue;
+	NUMBER BufferSize;
+	STRING ConnStrProperty, ConnStrValue;
+begin
+    // To Do:  Write script that will be executed when MyFunction is called.
+	ServerProperty = "IS_SQLSERVER_SERVER";
+	DataBaseProperty = "IS_SQLSERVER_DATABASE";
+	UserIDProperty = "IS_SQLSERVER_USERNAME";
+	PasswordProperty = "IS_SQLSERVER_PASSWORD";
+	BufferSize = 1024;
+	
+	MsiGetProperty(hMSI, ServerProperty, ServerValue, BufferSize);
+	MsiGetProperty(hMSI, DataBaseProperty, DataBaseValue, BufferSize);
+	MsiGetProperty(hMSI, UserIDProperty, UserIDValue, BufferSize);
+	MsiGetProperty(hMSI, PasswordProperty, PasswordValue, BufferSize);
+	//MessageBox(ServerValue, INFORMATION);
+	//MessageBox(DataBaseValue, INFORMATION);
+	//MessageBox(UserIDValue, INFORMATION);
+	//MessageBox(PasswordValue, INFORMATION);
+	
+	ConnStrProperty = "IS_ConnStr";
+	ConnStrValue = "Data Source=" + ServerValue +";Initial Catalog="+ DataBaseValue +";User Id="+ UserIDValue +";Password=" + PasswordValue;
+	MessageBox(ConnStrValue, INFORMATION);
+	MsiSetProperty(hMSI, ConnStrProperty, ConnStrValue);
+	
+
+end;
